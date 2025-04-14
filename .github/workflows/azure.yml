@@ -15,13 +15,28 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v1
       with:
-          creds: ${{ secrets.AZURE_CREDENTIALS}}
-          enable-AzPSSession: false
-          environment: "AzureCloud"
-          allow-no-subscriptions: false
-          audience: "api://AzureADTokenExchange"
-          auth-type: "SERVICE_PRINCIPAL"
+          cname: Azure Login Check
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  azure-login:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 
-    - name: Show success message
-      run: echo "Azure login successful 🎉"
+      - name: Show success message
+        run: echo "Azure login successful 🎉"
